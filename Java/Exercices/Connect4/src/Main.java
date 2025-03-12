@@ -21,80 +21,58 @@ public class Main {
                 planJeu[row][col] = Jeton.VIDE;
             }
         }
+        int tour = 0;
         afficherJeu(planJeu);
         Player gagnant = null;
         Player quiJoue = player2;
-//        do{
-        quiJoue = (quiJoue == player1) ? player2 : player1;
-        System.out.println("C'est le tour de " + quiJoue.getNom());
+        do{
+            tour++;
+            quiJoue = (quiJoue == player1) ? player2 : player1;
+            System.out.println("C'est le tour de " + quiJoue.getNom());
+            int[] posJoué = placerJeton(quiJoue, planJeu);
+//            System.out.println(posJoué[0] + " " + posJoué[1]);
+            afficherJeu(planJeu);
+            if (tour > 6){
+                gagnant = quiJoue.joueurGagnant(posJoué, planJeu);
+            }
 
-        planJeu[3][5] = Jeton.JAUNE;
-        planJeu[3][6] = Jeton.ROUGE;
-        placerJeton(quiJoue, planJeu);
 
 
-
-//        }while(gagnant == null);
+        }while(gagnant == null);
 
 
     }
 
-    public static boolean placerJeton(Player quiJoue, Jeton[][] planJeu) {
+
+    public static int[] placerJeton(Player quiJoue, Jeton[][] planJeu) {
         int colonne = saisirChoix(planJeu);
-        for(int row = 0; row < ROW; row++){
-            if(planJeu[row][colonne] != Jeton.VIDE ){
-                return true;
+        int[] pos = new int[2];
+        for (int row = 0; row < planJeu.length; row++) {
+            pos[0] = row;
+            pos[1] =  colonne;
+            if (planJeu[row][colonne] != Jeton.VIDE) {
+                pos[0]--;
+                return pos;
+            }
+            if (row > 0) {
+                planJeu[row - 1][colonne] = Jeton.VIDE;
             }
             planJeu[row][colonne] = quiJoue.jeton;
             afficherJeu(planJeu);
             try {
-                TimeUnit.MILLISECONDS.sleep(500);
-            }catch(Exception e){
-
-                }
-        }
-        return false;
-    }
-
-
-    public static int saisirChoix(Jeton[][]planJeu) {
-        Scanner scanner = new Scanner(System.in);
-        int colonne = -1;
-        do {
-            System.out.print("Dans quelle colonne voulez-vous mettre un jeton? [1 a 7] : ");
-            String saisie = scanner.nextLine().trim();
-            try {
-                colonne = validerChoix(saisie, planJeu);
-            } catch (Exception e ) {
-                System.out.println(e);
+                TimeUnit.MILLISECONDS.sleep(400);
+            } catch (Exception e) {
             }
-        } while (colonne < 1 || colonne > 7);
-        System.out.println(colonne);
-        return colonne;
-    }
-
-    public static int validerChoix(String choix, Jeton[][]planJeu) {
-        int colonne = 0;
-        try {
-            colonne = Integer.parseInt(choix) - 1;
-        } catch (InputMismatchException e) {
-            System.out.println("Avez-vous saisi un nombre?");
-        }
-        if (colonne < 1 || colonne > 7) {
-            throw new IllegalArgumentException("Erreur d'entree - saisir un nombre entre 1 et 7");
-        }
-        if( planJeu[0][colonne] != Jeton.VIDE){
-         throw new IllegalArgumentException("La colonne est pleine! vous ne pouvez pas y mettre un jeton.\nEssayez de nouveau.");
         }
 
-        return colonne;
+        return pos;
     }
 
     public static void afficherJeu(Jeton[][] planJeu) {
 
         for (int row = 0; row < planJeu.length; row++) {
 
-            for (int col = 0; col < COLUMN; col++) {
+            for (int col = 0; col < planJeu[0].length; col++) {
                 System.out.print("|");
                 System.out.print(planJeu[row][col].type);
                 System.out.print("|");
@@ -104,6 +82,43 @@ public class Main {
 
         System.out.println();
     }
+
+    public static int saisirChoix(Jeton[][] planJeu) {
+        Scanner scanner = new Scanner(System.in);
+        int colonne;
+        do {
+            do {
+                System.out.print("Dans quelle colonne voulez-vous mettre un jeton? [1 a 7] : ");
+                try {
+                    colonne = Integer.parseInt(scanner.nextLine().trim()) - 1;
+                } catch (InputMismatchException e) {
+                    System.out.println("Avez-vous saisi un nombre?");
+                    colonne = -1;
+                } catch (Exception e) {
+                    System.out.println(e);
+                    colonne = -1;
+                }
+                if (colonne < 1 || colonne > 6) {
+                    System.out.println("Erreur d'entree - saisir un nombre entre 1 et 7");
+                }
+            } while (colonne < 1 || colonne > 6);
+
+            if (planJeu[0][colonne] != Jeton.VIDE) {
+                System.out.println("La colonne est pleine! vous ne pouvez pas y mettre un jeton.\nEssayez de nouveau.");
+            }
+
+        } while (planJeu[0][colonne] != Jeton.VIDE);
+
+
+        System.out.println(colonne);
+        return colonne;
+    }
+
+
+
+
+
+
 
 
 }
