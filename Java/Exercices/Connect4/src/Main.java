@@ -33,7 +33,7 @@ public class Main {
 //            System.out.println(posJoué[0] + " " + posJoué[1]);
             afficherJeu(planJeu);
             if (tour > 6){
-                gagnant = quiJoue.joueurGagnant(posJoué, planJeu);
+//                gagnant = quiJoue.joueurGagnant(posJoué, planJeu);
             }
 
 

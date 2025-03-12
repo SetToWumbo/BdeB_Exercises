@@ -22,36 +22,35 @@ public class Player {
     public Player joueurGagnant(int[] pos, Jeton[][] planJeu) {
         Jeton[][] directions = new Jeton[4][];
         Jeton[] jetons;
-        int[]depart = pos;
-        for (int direction = 0; direction < directions.length; direction++) {
-            directions[direction] = switch (direction) {
-                case 0:
-                    jetons = new Jeton[6];
-                    jetons[pos[1]] = planJeu[pos[0]][pos[1]];
-                    for(int i = 0; i < pos[1]; i++){
-                        if(pos[0] - i < 0 || pos[1] - i < 0){
+                    int hor = 0, ver = 0, d1 = 0, d2 = 0;
+                    // horizontal:
+                    for (int y = Math.max(pos[0] - 3, 0); y < Math.min(pos[0] + 3, planJeu.length); y++) {//start: top row, end: bottom row
+                        for (int x = Math.max(pos[1] - 3, 0); x < Math.min(pos[1] + 3, planJeu[pos[0]].length); x++) {//start: left max, right max
+                            if (planJeu[pos[0]][x] == jeton) {
+                                hor++;
+                                if (hor == 4) {
+                                    return this;
+                                }
+                            } else {
+                                hor = 0;
+                            }
+                            if (planJeu[pos[1]][y] == jeton) {
+                                ver++;
+                                if (ver == 4) {
+                                    return this;
+
+                                }
+                            }
+
 
                         }
-                    }
-
-                    while(depart[0] != 0 && depart[1] != 0){
 
                     }
-                case 1:
 
-                case 2:
-                    jetons = planJeu[pos[0]];
-                case 3:
-                    jetons = new Jeton[planJeu[0].length];
-                    for (int row = 0; row < planJeu.length; row++) {
-                        jetons[row] = planJeu[row][pos[1]];
-                    }
-            };
+            return null;
         }
-        return null;
-    }
 
-    public Jeton getJeton(int[] pos, Jeton[][]planJeu){
+    public Jeton getJeton(int[] pos, Jeton[][] planJeu) {
         return planJeu[pos[0]][pos[1]];
     }
 }
