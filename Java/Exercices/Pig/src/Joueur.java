@@ -16,6 +16,6 @@ private final int MIN_POINTS = 0;
         return points;
     }
     public void setPoints(int points){
-       this.points = points;
+       this.points += points;
     }
 }

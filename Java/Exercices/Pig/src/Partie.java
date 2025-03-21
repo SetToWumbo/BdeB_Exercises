@@ -8,10 +8,6 @@ public class Partie {
     private Joueur[] joueurs;
     private int pointsVictoire;
 
-    public static void main(String[] args) {
-        Partie partie = new Partie();
-    }
-
     public Partie() {
         int nbJoueurs = 0;
         do {
@@ -30,8 +26,8 @@ public class Partie {
             boolean estDuplique;
             do {
                 System.out.print("Saisir le nom du Joueur " + (i + 1) + "? : ");
-                estDuplique = false;
                 nom = scanner.nextLine().trim();
+                estDuplique = false;
                 for (Joueur joueur : joueurs) {
                     if (joueur != null && joueur.getNom().equals(nom)) {
                         System.out.println(nom + " est deja dans la partie.");
@@ -43,34 +39,62 @@ public class Partie {
         }
     }
 
-    public void jouer(Joueur joueur) {
+    /**
+     * Deroulement d'un tour de la partie. retourne 1 si
+     *
+     * @param joueur
+     * @return fin du tour
+     */
+    public void jouerTour(Joueur joueur) {
         Scanner scanner = new Scanner(System.in);
         String saisie;
         int points = 0;
         int faceDe;
         do {
-            System.out.print(joueur.getNom());
-            System.out.print(" [R]ouler le de  [S]auvegarder vos points? ");
-            saisie = scanner.nextLine().toUpperCase();
-        } while (!saisie.equals("R") && !saisie.equals("S"));
-        switch (saisie) {
-            case "R":
-                faceDe = De.rouler();
-                if (faceDe == 1) {
-                    System.out.println(joueur.getNom() + " roule un 1!");
-                    return;
-                } else{
-                    System.out.println(joueur.getNom() + " roule un " + faceDe);
-                }
-        }
+            do {
+                System.out.print(joueur.getNom());
+                System.out.print(": [R]ouler le dé ou [S]auvegarder vos points? ");
+                saisie = scanner.nextLine().toUpperCase();
+            } while (!saisie.equals("R") && !saisie.equals("S"));
+            switch (saisie) {
+                case "R":
+                    faceDe = De.rouler();
+                    if (faceDe == 1) {
+                        System.out.println(joueur.getNom() + " roule un 1!");
+                        return;
+                    } else {
+                        System.out.print(joueur.getNom() + " roule un " + faceDe + ". ");
+                        points += faceDe;
+                        System.out.print("Jusqu'a maintenant dans ce tour : " + points);
+                        System.out.println();
+                    }
+                    break;
+                case "S":
+                    joueur.setPoints(points);
+            }
+        } while (saisie.equals("R"));
     }
 
     /**
-     * Construit les stats de la partie par joueur
+     * Verifie si un joueur gagne la partie.
+     *
+     * @return joueur qui gagne ou null
+     */
+    public Joueur estGagnant() {
+        for (Joueur joueur : joueurs) {
+            if (joueur.getPoints() >= pointsVictoire) {
+                return joueur;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Construit les stats de la partie par joueur a afficher
      *
      * @return String contenant les stats de la partie
      */
-    private String sommaire() {
+    public String sommaire() {
         StringBuilder sb = new StringBuilder();
         sb.append("SOMMAIRE: ");
         for (Joueur joueur : joueurs) {
@@ -81,7 +105,6 @@ public class Partie {
         }
         return sb.toString();
     }
-
 
     /**
      * Permet de saisir un numéro entre deux valeurs inclusivement.
@@ -101,5 +124,9 @@ public class Partie {
         } catch (Exception e) {
         }
         return num;
+    }
+
+    public Joueur[] getJoueurs() {
+        return joueurs;
     }
 }
