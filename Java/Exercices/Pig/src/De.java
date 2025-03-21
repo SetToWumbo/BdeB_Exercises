@@ -5,6 +5,4 @@ public class De {
     public static int rouler(){
         return random.nextInt(1, 7);
     }
-
-
 }

@@ -1,7 +1,7 @@
 public class Joueur {
 
 private final int MIN_POINTS = 0;
-    private String nom;
+    private final String nom;
     private int points;
 
     Joueur(String nom){
@@ -15,7 +15,7 @@ private final int MIN_POINTS = 0;
     public int getPoints(){
         return points;
     }
-    public void setNom(int points){
+    public void setPoints(int points){
        this.points = points;
     }
 }
