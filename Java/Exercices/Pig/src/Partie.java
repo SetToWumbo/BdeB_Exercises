@@ -9,29 +9,25 @@ public class Partie {
     private int pointsVictoire;
 
     public Partie() {
-        int nbJoueurs = 0;
-        do {
-            System.out.print("Nombre [2, 5] de Joueurs? : ");
-            nbJoueurs = saisirMontant(MIN_JOUEURS, MAX_JOUEURS);
-            joueurs = new Joueur[nbJoueurs];
-        } while (nbJoueurs < MIN_JOUEURS || nbJoueurs > MAX_JOUEURS);
-        do {
-            System.out.print("Points pour la victoire? [10,100] : ");
-            pointsVictoire = saisirMontant(MIN_POINTS, MAX_POINTS);
-        } while (pointsVictoire < MIN_POINTS || pointsVictoire > MAX_POINTS);
+        int nbJoueurs = saisirMontantIncl("Nombre [2, 5] de Joueurs? : ", MIN_JOUEURS, MAX_JOUEURS);
+        joueurs = new Joueur[nbJoueurs];
+        pointsVictoire = saisirMontantIncl("Points [10, 100] pour la victoire?", MIN_POINTS, MAX_POINTS);
 
+        Scanner scanner = new Scanner(System.in);
+        boolean estDuplique;
         for (int i = 0; i < joueurs.length; i++) {
-            Scanner scanner = new Scanner(System.in);
             String nom;
-            boolean estDuplique;
             do {
                 System.out.print("Saisir le nom du Joueur " + (i + 1) + "? : ");
                 nom = scanner.nextLine().trim();
                 estDuplique = false;
                 for (Joueur joueur : joueurs) {
-                    if (joueur != null && joueur.getNom().equals(nom)) {
+                    if (joueur == null) {
+                        break;
+                    } else if (joueur.getNom().equals(nom)) {
                         System.out.println(nom + " est deja dans la partie.");
                         estDuplique = true;
+                        break;
                     }
                 }
             } while (estDuplique);
@@ -40,39 +36,54 @@ public class Partie {
     }
 
     /**
-     * Deroulement d'un tour de la partie. retourne 1 si
-     *
-     * @param joueur
-     * @return fin du tour
+     * Deroulement d'un tour de la partie.
      */
-    public void jouerTour(Joueur joueur) {
+    public void jouer() {
         Scanner scanner = new Scanner(System.in);
-        String saisie;
+        String saisie = "";
+        Joueur joueur;
+        int compteur = 0;
         int points = 0;
-        int faceDe;
+        int faceDe = 0;
+
         do {
+            System.out.println(sommaire());
             do {
-                System.out.print(joueur.getNom());
-                System.out.print(": [R]ouler le dé ou [S]auvegarder vos points? ");
-                saisie = scanner.nextLine().toUpperCase();
-            } while (!saisie.equals("R") && !saisie.equals("S"));
-            switch (saisie) {
-                case "R":
-                    faceDe = De.rouler();
-                    if (faceDe == 1) {
-                        System.out.println(joueur.getNom() + " roule un 1!");
-                        return;
-                    } else {
-                        System.out.print(joueur.getNom() + " roule un " + faceDe + ". ");
-                        points += faceDe;
-                        System.out.print("Jusqu'a maintenant dans ce tour : " + points);
-                        System.out.println();
-                    }
-                    break;
-                case "S":
-                    joueur.setPoints(points);
-            }
-        } while (saisie.equals("R"));
+                joueur = joueurs[compteur % joueurs.length];
+                do {
+                    System.out.print(joueur.getNom());
+                    System.out.print(": [R]ouler le dé ou [S]auvegarder vos points? ");
+                    saisie = scanner.nextLine().toUpperCase();
+                } while (!saisie.equals("R") && !saisie.equals("S"));
+                switch (saisie) {
+                    case "R":
+                        faceDe = De.rouler();
+                        if (faceDe == 1) {
+                            System.out.println(joueur.getNom() + " roule un 1!");
+                            points = 0;
+                            compteur++;
+                            break;
+                        } else {
+                            System.out.print(joueur.getNom() + " roule un " + faceDe + ". ");
+                            points += faceDe;
+                            System.out.print("Jusqu'a maintenant dans ce tour : " + points);
+                            System.out.println();
+                        }
+                        break;
+                    case "S":
+                        joueur.setPoints(joueur.getPoints() + points);
+                        points = 0;
+                        if (joueur.getPoints() >= pointsVictoire) {
+                            System.out.println(joueur.getNom() + " a gagne la partie!!");
+                            System.out.println();
+                            return;
+                        } else {
+                            compteur++;
+                            break;
+                        }
+                }
+            } while (faceDe != 1 && saisie.equals("R"));
+        } while (true);
     }
 
     /**
@@ -112,17 +123,19 @@ public class Partie {
      *
      * @param min Balise minimum
      * @param max Balise maximum
-     * @return Saisie de l'utilisateur, ou min - 1
+     * @return Numero saisi par l'utilisateur
      */
-    private int saisirMontant(int min, int max) {
+    private int saisirMontantIncl(String question, int min, int max) {
         Scanner scanner = new Scanner(System.in);
-        String saisie;
         int num = min - 1;
-        saisie = scanner.nextLine();
-        try {
-            num = Integer.parseInt(saisie);
-        } catch (Exception e) {
-        }
+        do {
+            System.out.println(question);
+            String saisie = scanner.nextLine();
+            try {
+                num = Integer.parseInt(saisie);
+            } catch (Exception e) {
+            }
+        } while (num < min || num > max);
         return num;
     }
 
