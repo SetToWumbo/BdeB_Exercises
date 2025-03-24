@@ -12,6 +12,8 @@ public class Personne {
 
     public void infecter(Virus virus) {
         this.virus = virus;
+        etat = Etat.INFECTEE;
+        System.out.println("personne infectee");
     }
 
     public void exposer(Virus virus) {
@@ -20,16 +22,17 @@ public class Personne {
         }
     }
 
-    public Etat evoluer() {
+    public void evoluer() {
         dureeInf--;
         if (virus.tue()) {
-            return Etat.DECEDEE;
+            etat = Etat.DECEDEE;
+            System.out.println("personne decedee");
         } else {
-            if (dureeInf == 0) {
-                return Etat.RETABLIE;
+            if (etat == Etat.INFECTEE && dureeInf == 0) {
+                etat = Etat.RETABLIE;
+                System.out.println("personne retablie!");
             }
         }
-        return etat;
     }
 
     public Etat getEtat() {

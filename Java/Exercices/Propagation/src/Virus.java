@@ -16,6 +16,14 @@ public class Virus {
         tauxMort = random.nextInt(1, 101);
     }
 
+    public Virus(String nomVirus, int dureeInf, int dureeCrit, int degCont, int tauxMort){
+       this.nomVirus = nomVirus;
+       this.dureeInf = dureeInf;
+       this.dureeCrit = dureeCrit;
+       this.degCont = degCont;
+       this.tauxMort = tauxMort;
+    }
+
     public int getDureeInf() {
         return dureeInf;
     }
@@ -29,6 +37,6 @@ public class Virus {
     }
 
     public boolean tue() {
-        return (random.nextInt(1, 101) <= degCont);
+        return (random.nextInt(1, 101) <= tauxMort);
     }
 }
