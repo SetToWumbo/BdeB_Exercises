@@ -87,21 +87,7 @@ public class Partie {
     }
 
     /**
-     * Verifie si un joueur gagne la partie.
-     *
-     * @return joueur qui gagne ou null
-     */
-    public Joueur estGagnant() {
-        for (Joueur joueur : joueurs) {
-            if (joueur.getPoints() >= pointsVictoire) {
-                return joueur;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Construit les stats de la partie par joueur a afficher
+     * Construit les stats de la partie à afficher
      *
      * @return String contenant les stats de la partie
      */
@@ -118,11 +104,10 @@ public class Partie {
     }
 
     /**
-     * Permet de saisir un numéro entre deux valeurs inclusivement.
-     * Retourne min - 1 en cas d'entree invalide.
+     * Demande à l'utilisateur de saisir un numéro compris entre deux valeurs inclusivement.
      *
-     * @param min Balise minimum
-     * @param max Balise maximum
+     * @param min Valeur minimum
+     * @param max Valeur maximum
      * @return Numero saisi par l'utilisateur
      */
     private int saisirMontantIncl(String question, int min, int max) {
