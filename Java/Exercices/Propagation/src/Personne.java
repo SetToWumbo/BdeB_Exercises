@@ -12,13 +12,14 @@ public class Personne {
 
     public void infecter(Virus virus) {
         this.virus = virus;
+        dureeInf = virus.getDureeInf();
         etat = Etat.INFECTEE;
         System.out.println("personne infectee");
     }
 
     public void exposer(Virus virus) {
-        if (virus.infecte() && etat == Etat.SUSCEPTIBLE) {
-            etat = Etat.INFECTEE;
+        if (etat == Etat.SUSCEPTIBLE && virus.infecte()) {
+            infecter(virus);
         }
     }
 
