@@ -17,7 +17,9 @@ public class Caisse {
             System.out.println("Le panier que vous tentez de facturer est vide!");
             return null;
         }
+
         Facture facture = new Facture(numCaisse, produit);
+
         do {
             try {
                 produit = panier.retirer();
@@ -27,6 +29,6 @@ public class Caisse {
             }
             facture.ajouter(produit);
         } while (produit != null);
-        return new Facture(numCaisse, produit);
+        return facture;
     }
 }
