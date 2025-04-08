@@ -1,14 +1,14 @@
 import java.util.EmptyStackException;
 
 public class Caisse {
-    private int numCaisse;
+    private final int numCaisse;
 
     public Caisse(int numCaisse) {
         this.numCaisse = numCaisse;
     }
 
     //    figure out if the cart is empty or not yet, exit if cart is empty
-//    add product to receipt list
+    //    add product to receipt list
     public Facture facturer(Panier panier) {
         Produit produit;
         try {
@@ -25,10 +25,11 @@ public class Caisse {
                 produit = panier.retirer();
             } catch (EmptyStackException e) {
                 System.out.println("Facturation completee.");
-                return facture;
+                produit = null;
             }
             facture.ajouter(produit);
         } while (produit != null);
         return facture;
     }
+
 }
